@@ -17,11 +17,13 @@ def getImgUrl(tweet):
     return tweet.entities["media"][0]["media_url"]
 
 def noImage(tweet):
-    api.update_status("Image not found 😔",in_reply_to_status_id = tweet.id)
+    api.update_status("@{} Sorry, image not found 😔".format(tweet.user.screen_name),in_reply_to_status_id = tweet.id)
     global repliedNoImg 
     repliedNoImg+=1
 
 def replyTo(tweet):
+    if(tweet.user == api.me()):
+        return;
     url = ""
     try:
         url = getImgUrl(tweet)
@@ -32,7 +34,7 @@ def replyTo(tweet):
     Asciify.generate(img,8,"Assets/JetBrainsMono-ExtraBold.ttf",10,saveAs = "reply.png")
     img.close()
     media = api.media_upload("reply.png")
-    api.update_status("😀",in_reply_to_status_id = tweet.id,media_ids=[media.media_id])
+    api.update_status("@{} 😀".format(tweet.user.screen_name),in_reply_to_status_id = tweet.id,media_ids=[media.media_id])
     global repliedImg
     repliedImg+=1
 
@@ -55,7 +57,7 @@ def checkStatuses(lastId):
     return lastId
 
 dailyUpdate = True
-gLastId = "1287578288165130240"
+gLastId = "1287594425703706624"
 
 api = authenticate()
 DMSender.sendMsg(api,recipient,"We are up and running")
@@ -68,6 +70,7 @@ try:
             if(not dailyUpdate and time.localtime().tm_hour == 3):
                 print(DMSender.sendMsg(api,recipient,"Daily stats: {} mentions, {} replies, {} replied no image, {} errors. LAST_ID: {}".format(total,repliedImg,repliedNoImg,errors,gLastId)))
                 total = repliedImg = repliedNoImg = errors = 0
+                dailyUpdate = True 
             gLastId = checkStatuses(gLastId)
             print("So far today: {} mentions, {} replies, {} replied no image, {} errors. LAST_ID: {}".format(total,repliedImg,repliedNoImg,errors,gLastId))
 
