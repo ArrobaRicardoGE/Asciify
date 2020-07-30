@@ -1,5 +1,6 @@
-import tweepy, DMSender, Asciify, time, os
+import tweepy, DMSender, Asciify, time, os, RepoUploader
 from PIL import Image
+from github import Github
 
 total = 0
 repliedImg = 0
@@ -11,7 +12,8 @@ def authenticate():
     auth = tweepy.OAuthHandler(os.environ["tw_consumer_key"],os.environ["tw_consumer_secret"])
     auth.set_access_token(os.environ["tw_access_token"],os.environ["tw_access_token_secret"])
     api = tweepy.API(auth)
-    return api
+    g = Github(os.environ["gh_key"])
+    return (api,g)
 
 def getImgUrl(tweet):
     return tweet.entities["media"][0]["media_url"]
@@ -23,7 +25,7 @@ def noImage(tweet):
 
 def replyTo(tweet):
     if(tweet.user == api.me()):
-        return;
+        return
     url = ""
     try:
         url = getImgUrl(tweet)
@@ -31,10 +33,11 @@ def replyTo(tweet):
         noImage(tweet)
         return
     img = Asciify.getImage(url)
-    Asciify.generate(img,8,"Assets/JetBrainsMono-ExtraBold.ttf",10,saveAs = "reply.png")
+    mat = Asciify.generate(img,8,"Assets/JetBrainsMono-ExtraBold.ttf",10,saveAs = "reply.png")
     img.close()
+    pageUrl = RepoUploader.postNewPage(g,tweet.user.screen_name+str(time.time()).replace(".",""),Asciify.matrixToString(mat))
     media = api.media_upload("reply.png")
-    api.update_status("@{} 😀".format(tweet.user.screen_name),in_reply_to_status_id = tweet.id,media_ids=[media.media_id])
+    api.update_status("@{} 😀\n{}".format(tweet.user.screen_name,pageUrl),in_reply_to_status_id = tweet.id,media_ids=[media.media_id])
     global repliedImg
     repliedImg+=1
 
@@ -46,20 +49,18 @@ def checkStatuses(lastId):
         total+=1
         try:
             replyTo(tweet)
-        except:
-            retVal = DMSender.sendMsg(api,recipient,"Unexpected error while replying to {}".format(tweet.id))
+        except Exception as e:
+            DMSender.sendMsg(api,recipient,"Unexpected error while replying to {}".format(tweet.id))
+            print(DMSender.sendMsg(api,recipient,str(e)))
             global errors
             errors+=1
-            if(not retVal):
-                print("Unable to reach user via DM")
-
     if(len(mentions)>0):lastId = mentions[-1].id
     return lastId
 
 dailyUpdate = True
-gLastId = "1287594425703706624"
+gLastId = "1288626032019410944"
 
-api = authenticate()
+api,g = authenticate()
 DMSender.sendMsg(api,recipient,"We are up and running")
 
 try:
