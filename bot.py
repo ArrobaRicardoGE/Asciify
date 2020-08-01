@@ -58,7 +58,7 @@ def checkStatuses(lastId):
     return lastId
 
 dailyUpdate = True
-gLastId = "1288626032019410944"
+gLastId = "1288627799994109955"
 
 api,g = authenticate()
 DMSender.sendMsg(api,recipient,"We are up and running")
