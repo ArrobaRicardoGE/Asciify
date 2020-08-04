@@ -1,4 +1,4 @@
-import tweepy, DMSender, Asciify, time, os, RepoUploader
+import tweepy, DMSender, Asciify, time, os, RepoUploader, PasteAPI
 from PIL import Image
 from github import Github
 
@@ -13,7 +13,8 @@ def authenticate():
     auth.set_access_token(os.environ["tw_access_token"],os.environ["tw_access_token_secret"])
     api = tweepy.API(auth)
     g = Github(os.environ["gh_key"])
-    return (api,g)
+    pe = PasteAPI.API(os.environ["pe_key"])
+    return (api,g,pe)
 
 def getImgUrl(tweet):
     return tweet.entities["media"][0]["media_url"]
@@ -60,7 +61,7 @@ def checkStatuses(lastId):
 dailyUpdate = True
 gLastId = "1288627799994109955"
 
-api,g = authenticate()
+api,g,pe = authenticate()
 DMSender.sendMsg(api,recipient,"We are up and running")
 
 try:
@@ -72,7 +73,10 @@ try:
                 print(DMSender.sendMsg(api,recipient,"Daily stats: {} mentions, {} replies, {} replied no image, {} errors. LAST_ID: {}".format(total,repliedImg,repliedNoImg,errors,gLastId)))
                 total = repliedImg = repliedNoImg = errors = 0
                 dailyUpdate = True 
+            gLastId = pe.retrieveLastId()
             gLastId = checkStatuses(gLastId)
+            pe.deleteLastPaste()
+            pe.createNewPaste(str(gLastId))
             print("So far today: {} mentions, {} replies, {} replied no image, {} errors. LAST_ID: {}".format(total,repliedImg,repliedNoImg,errors,gLastId))
 
         except tweepy.RateLimitError as e:
