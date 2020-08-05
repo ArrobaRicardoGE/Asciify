@@ -1,6 +1,5 @@
-import tweepy, DMSender, Asciify, time, os, RepoUploader, PasteAPI
+import tweepy, DMSender, Asciify, time, os, RepoUploaderV2
 from PIL import Image
-from github import Github
 
 total = 0
 repliedImg = 0
@@ -12,9 +11,8 @@ def authenticate():
     auth = tweepy.OAuthHandler(os.environ["tw_consumer_key"],os.environ["tw_consumer_secret"])
     auth.set_access_token(os.environ["tw_access_token"],os.environ["tw_access_token_secret"])
     api = tweepy.API(auth)
-    g = Github(os.environ["gh_key"])
-    pe = PasteAPI.API(os.environ["pe_key"])
-    return (api,g,pe)
+    gl = RepoUploaderV2.API(os.environ["gl_token"])
+    return (api,gl)
 
 def getImgUrl(tweet):
     return tweet.entities["media"][0]["media_url"]
@@ -36,7 +34,7 @@ def replyTo(tweet):
     img = Asciify.getImage(url)
     mat = Asciify.generate(img,8,"Assets/JetBrainsMono-ExtraBold.ttf",10,saveAs = "reply.png")
     img.close()
-    pageUrl = RepoUploader.postNewPage(g,tweet.user.screen_name+str(time.time()).replace(".",""),Asciify.matrixToString(mat))
+    pageUrl = gl.uploadFile(tweet.user.screen_name+str(time.time()).replace(".",""),Asciify.matrixToString(mat))
     media = api.media_upload("reply.png")
     api.update_status("@{} 😀\n{}".format(tweet.user.screen_name,pageUrl),in_reply_to_status_id = tweet.id,media_ids=[media.media_id])
     global repliedImg
@@ -59,9 +57,9 @@ def checkStatuses(lastId):
     return lastId
 
 dailyUpdate = True
-gLastId = "1288627799994109955"
+gLastId = "1290841760256667648"
 
-api,g,pe = authenticate()
+api,gl = authenticate()
 DMSender.sendMsg(api,recipient,"We are up and running")
 
 try:
@@ -73,10 +71,9 @@ try:
                 print(DMSender.sendMsg(api,recipient,"Daily stats: {} mentions, {} replies, {} replied no image, {} errors. LAST_ID: {}".format(total,repliedImg,repliedNoImg,errors,gLastId)))
                 total = repliedImg = repliedNoImg = errors = 0
                 dailyUpdate = True 
-            gLastId = pe.retrieveLastId()
+            gLastId = int(gl.getFileStr('lastID.txt'))
             gLastId = checkStatuses(gLastId)
-            pe.deleteLastPaste()
-            pe.createNewPaste(str(gLastId))
+            gl.updateFile('lastID.txt',str(gLastId))
             print("So far today: {} mentions, {} replies, {} replied no image, {} errors. LAST_ID: {}".format(total,repliedImg,repliedNoImg,errors,gLastId))
 
         except tweepy.RateLimitError as e:
