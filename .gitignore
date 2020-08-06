@@ -133,3 +133,5 @@ dmypy.json
 *.css
 *.png
 .vscode/settings.json
+*.ipynb
+*.html

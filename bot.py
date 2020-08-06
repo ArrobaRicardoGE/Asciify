@@ -15,7 +15,7 @@ def authenticate():
     return (api,gl)
 
 def getImgUrl(tweet):
-    return tweet.entities["media"][0]["media_url"]
+    return tweet.entities["media"][0]["media_url"]+':large'
 
 def noImage(tweet):
     api.update_status("@{} Sorry, image not found 😔".format(tweet.user.screen_name),in_reply_to_status_id = tweet.id)
@@ -32,7 +32,8 @@ def replyTo(tweet):
         noImage(tweet)
         return
     img = Asciify.getImage(url)
-    mat = Asciify.generate(img,8,"Assets/JetBrainsMono-ExtraBold.ttf",10,saveAs = "reply.png")
+    
+    mat = Asciify.generate(img,"Assets/JetBrainsMono-ExtraBold.ttf",saveAs = "reply.png")
     img.close()
     pageUrl = gl.uploadFile(tweet.user.screen_name+str(time.time()).replace(".",""),Asciify.matrixToString(mat))
     media = api.media_upload("reply.png")
@@ -57,7 +58,7 @@ def checkStatuses(lastId):
     return lastId
 
 dailyUpdate = True
-gLastId = "1290841760256667648"
+previousLastId = "1290841760256667648"
 
 api,gl = authenticate()
 DMSender.sendMsg(api,recipient,"We are up and running")
@@ -68,13 +69,15 @@ try:
             if(time.localtime().tm_hour == 2):
                 dailyUpdate = False
             if(not dailyUpdate and time.localtime().tm_hour == 3):
-                print(DMSender.sendMsg(api,recipient,"Daily stats: {} mentions, {} replies, {} replied no image, {} errors. LAST_ID: {}".format(total,repliedImg,repliedNoImg,errors,gLastId)))
+                print(DMSender.sendMsg(api,recipient,"Daily stats: {} mentions, {} replies, {} replied no image, {} errors. LAST_ID: {}".format(total,repliedImg,repliedNoImg,errors,previousLastId)))
                 total = repliedImg = repliedNoImg = errors = 0
                 dailyUpdate = True 
-            gLastId = int(gl.getFileStr('lastID.txt'))
-            gLastId = checkStatuses(gLastId)
-            gl.updateFile('lastID.txt',str(gLastId))
-            print("So far today: {} mentions, {} replies, {} replied no image, {} errors. LAST_ID: {}".format(total,repliedImg,repliedNoImg,errors,gLastId))
+            previousLastId = int(gl.getFileStr('lastID.txt'))
+            newLastId = checkStatuses(previousLastId)
+            #This is to only update the file if requiered
+            if(newLastId != previousLastId):         
+                gl.updateFile('lastID.txt',str(newLastId))
+            print("So far today: {} mentions, {} replies, {} replied no image, {} errors. LAST_ID: {}".format(total,repliedImg,repliedNoImg,errors,newLastId))
 
         except tweepy.RateLimitError as e:
             print("RateLimit: "+e.response.text)

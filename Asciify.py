@@ -1,10 +1,12 @@
 from PIL import Image, ImageFont, ImageDraw
-import requests,io,RepoUploader
+import requests,io,math
 
 def mapPalette(value,pallette):
     return pallette[int(value/(256/len(pallette)))]
 
-def generate(img,red,fontPath,fontSize,pallette = "@#r+=-., ",saveAs = ""):
+def generate(img,fontPath,pallette = "@#r+=-., ",saveAs = ""):
+    red = math.ceil(img.width/150)
+    fontSize = 10
     img = img.convert(mode = "L")
     font = ImageFont.truetype(font=fontPath,size=fontSize)
     cellSize = int(font.getsize("A")[1])
