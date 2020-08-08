@@ -19,7 +19,7 @@ class API:
         f.content = content
         f.save(branch = 'master', commit_message = 'UpdatedId'+content)
 
-    def uploadFile(self,name,content,user = 'ArrobaRicardoGE',mail = 'mail@domain.com',extension = '.html'):
+    def postNewPage(self,name,content,user = 'ArrobaRicardoGE',mail = 'mail@domain.com',extension = '.html'):
         encodedData = encodedData = base64.b64encode(bytes(content,'utf-8'))
         payload = {
             'file_path':name+extension,

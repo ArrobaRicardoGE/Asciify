@@ -1,4 +1,4 @@
-import tweepy, DMSender, Asciify, time, os, RepoUploaderV2
+import tweepy, DMSender, Asciify, time, os, RepoUploader, RepoUploaderV2
 from PIL import Image
 
 total = 0
@@ -11,8 +11,9 @@ def authenticate():
     auth = tweepy.OAuthHandler(os.environ["tw_consumer_key"],os.environ["tw_consumer_secret"])
     auth.set_access_token(os.environ["tw_access_token"],os.environ["tw_access_token_secret"])
     api = tweepy.API(auth)
+    gh = RepoUploader.API(os.environ["gh_key"])
     gl = RepoUploaderV2.API(os.environ["gl_token"])
-    return (api,gl)
+    return (api,gh,gl)
 
 def getImgUrl(tweet):
     return tweet.entities["media"][0]["media_url"]+':large'
@@ -35,7 +36,7 @@ def replyTo(tweet):
     
     mat = Asciify.generate(img,"Assets/JetBrainsMono-ExtraBold.ttf",saveAs = "reply.png")
     img.close()
-    pageUrl = gl.uploadFile(tweet.user.screen_name+str(time.time()).replace(".",""),Asciify.matrixToString(mat))
+    pageUrl = gh.postNewPage(tweet.user.screen_name+str(time.time()).replace(".",""),Asciify.matrixToString(mat))
     media = api.media_upload("reply.png")
     api.update_status("@{} 😀\n{}".format(tweet.user.screen_name,pageUrl),in_reply_to_status_id = tweet.id,media_ids=[media.media_id])
     global repliedImg
@@ -60,7 +61,7 @@ def checkStatuses(lastId):
 dailyUpdate = True
 previousLastId = "1290841760256667648"
 
-api,gl = authenticate()
+api,gh,gl = authenticate()
 DMSender.sendMsg(api,recipient,"We are up and running")
 
 try:
