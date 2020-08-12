@@ -1,4 +1,4 @@
-import tweepy, DMSender, Asciify, time, os, RepoUploader, RepoUploaderV2
+import tweepy, DMSender, Asciify, time, os, RepoUploader, RepoUploaderV2, traceback
 from PIL import Image
 
 total = 0
@@ -59,7 +59,7 @@ def checkStatuses(lastId):
     return lastId
 
 dailyUpdate = True
-previousLastId = "1290841760256667648"
+previousLastId = None
 
 api,gh,gl = authenticate()
 DMSender.sendMsg(api,recipient,"We are up and running")
@@ -79,7 +79,7 @@ try:
             if(newLastId != previousLastId):         
                 gl.updateFile('lastID.txt',str(newLastId))
             print("So far today: {} mentions, {} replies, {} replied no image, {} errors. LAST_ID: {}".format(total,repliedImg,repliedNoImg,errors,newLastId))
-
+            
         except tweepy.RateLimitError as e:
             print("RateLimit: "+e.response.text)
             print(DMSender.sendMsg(api,recipient,"Urgent: {}\n Sleeping for one hour".format(e.response.text)))
@@ -90,6 +90,7 @@ try:
         except Exception as e:
             print("Error: "+str(e))
             print(DMSender.sendMsg(api,recipient,"URGENT: {}\n Sleeping for two hours".format(str(e))))
+            traceback.print_exc()
             time.sleep(7200)
         time.sleep(15)
 except Exception as e:
