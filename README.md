@@ -1,6 +1,6 @@
 # Asciify your images!
 
->### Do you want to asciify your images? Talk to our Twitter [bot](https://twitter.com/AsciifyApp)!
+>### Do you want to Asciify your images? Talk to our [Twitter bot](https://twitter.com/AsciifyApp)!
 
 ## Privacy Disclaimer
 
@@ -25,15 +25,25 @@ Hope you enjoy! :)
 ## Gallery 
 <img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample1Or.png?raw=true" width = "500">
 <img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample1.png?raw=true" width = "500">
----
+
+Raw characters: [https://asciify.github.io/sample1](https://asciify.github.io/sample1)
+
 <img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample2Or.jpg?raw=true" width = "500">
 <img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample2.png?raw=true" width = "500">
----
+
+Raw characters: [https://asciify.github.io/sample2](https://asciify.github.io/sample2)
+
 <img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample3Or.png?raw=true" width = "250">
 <img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample3.png?raw=true" width = "250">
----
+
+Raw characters: [https://asciify.github.io/sample3](https://asciify.github.io/sample3)
+
 <img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample4Or.png?raw=true" width = "500">
 <img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample4.png?raw=true" width = "500">
----
+
+Raw characters: [https://asciify.github.io/sample4](https://asciify.github.io/sample4)
+
 <img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample5Or.png?raw=true" width = "500">
 <img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample5.png?raw=true" width = "500">
+
+Raw characters: [https://asciify.github.io/sample5](https://asciify.github.io/sample5)
