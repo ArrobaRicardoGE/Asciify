@@ -129,9 +129,6 @@ dmypy.json
 .pyre/
 
 #Additiona files and folders
-*.txt
-*.css
-*.png
 .vscode/settings.json
 *.ipynb
-*.html
+junk
