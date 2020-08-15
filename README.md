@@ -23,3 +23,17 @@ For any issue or suggestion, feel free to open a new [issue](https://github.com/
 Hope you enjoy! :)
 
 ## Gallery 
+<img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample1Or.png?raw=true" width = "500">
+<img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample1.png?raw=true" width = "500">
+---
+<img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample2Or.jpg?raw=true" width = "500">
+<img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample2.png?raw=true" width = "500">
+---
+<img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample3Or.png?raw=true" width = "250">
+<img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample3.png?raw=true" width = "250">
+---
+<img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample4Or.png?raw=true" width = "500">
+<img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample4.png?raw=true" width = "500">
+---
+<img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample5Or.png?raw=true" width = "500">
+<img src="https://github.com/ArrobaRicardoGE/Asciify/blob/master/Assets/sample5.png?raw=true" width = "500">
