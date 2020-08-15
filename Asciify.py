@@ -36,5 +36,3 @@ def matrixToString(mat):
             s+=mat[i][j]
         s+='\n'
     return s
-
-

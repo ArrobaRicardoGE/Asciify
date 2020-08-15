@@ -5,7 +5,7 @@ total = 0
 repliedImg = 0
 repliedNoImg = 0
 errors = 0
-recipient = "860537503006298113"
+recipient = "860537503006298113"    #Yep, that is me, DM me if you want :)
 
 def authenticate():
     auth = tweepy.OAuthHandler(os.environ["tw_consumer_key"],os.environ["tw_consumer_secret"])
