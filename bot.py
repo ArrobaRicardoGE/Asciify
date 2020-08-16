@@ -8,8 +8,8 @@ errors = 0
 recipient = "860537503006298113"    #Yep, that is me, DM me if you want :)
 
 def authenticate():
-    auth = tweepy.OAuthHandler(os.environ["tw_consumer_key"],os.environ["tw_consumer_secret"])
-    auth.set_access_token(os.environ["tw_access_token"],os.environ["tw_access_token_secret"])
+    auth = tweepy.OAuthHandler(os.environ["tw_consumer_keyB"],os.environ["tw_consumer_secretB"])
+    auth.set_access_token(os.environ["tw_access_tokenB"],os.environ["tw_access_token_secretB"])
     api = tweepy.API(auth)
     gh = RepoUploader.API(os.environ["gh_key"])
     gl = RepoUploaderV2.API(os.environ["gl_token"])
@@ -62,7 +62,7 @@ dailyUpdate = True
 previousLastId = None
 
 api,gh,gl = authenticate()
-DMSender.sendMsg(api,recipient,"We are up and running")
+print(DMSender.sendMsg(api,recipient,"We are up and running"))
 
 try:
     while(True):

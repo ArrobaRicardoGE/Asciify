@@ -7,5 +7,5 @@ def sendMsg(api,recipient,msg):
     try:
         api.send_direct_message(recipient,msg)
         return "Message sent"
-    except:
-        return "Unable to reach user via DM"
+    except Exception as e:
+        return "Unable to reach user via DM"+e.response.text
