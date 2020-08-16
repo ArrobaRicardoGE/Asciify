@@ -4,7 +4,7 @@ import requests,io,math
 def mapPalette(value,pallette):
     return pallette[int(value/(256/len(pallette)))]
 
-def generate(img,fontPath,pallette = "@#r+=-., ",saveAs = ""):
+def generate(img,fontPath='Assets/JetBrainsMono-ExtraBold.ttf',pallette = "@#r+=-., ",saveAs = ""):
     red = math.ceil(img.width/150)
     fontSize = 10
     img = img.convert(mode = "L")
@@ -19,9 +19,18 @@ def generate(img,fontPath,pallette = "@#r+=-., ",saveAs = ""):
             suma=img.getpixel((i,j))
             cnv.text(((i)*cellSize,(j)*cellSize),mapPalette(suma,pallette),font=font,fill="#000000")
             mat[i][j] = mapPalette(suma,pallette)
+    asc = watermark(asc)
     if(saveAs != ""):
         asc.save(saveAs)
     return mat
+
+def watermark(img,fontPath='Assets/JetBrainsMono-ExtraBold.ttf'):
+    cnv = ImageDraw.Draw(img)
+    font = ImageFont.truetype(font=fontPath,size=20)
+    cnv.rectangle([img.width-250,img.height-30,img.width,img.height-5],fill = '#FFFFFF')
+    cnv.text((img.width-245,img.height-30),'Twitter: @AsciifyApp',font = font, fill = '#000000')
+    return img
+
 
 def getImage(url):
     r = requests.get(url)
