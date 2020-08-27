@@ -73,11 +73,33 @@ try:
                 print(DMSender.sendMsg(api,recipient,"Daily stats: {} mentions, {} replies, {} replied no image, {} errors. LAST_ID: {}".format(total,repliedImg,repliedNoImg,errors,previousLastId)))
                 total = repliedImg = repliedNoImg = errors = 0
                 dailyUpdate = True 
-            previousLastId = int(gl.getFileStr('lastID.txt'))
+            tries = 0
+            while True:
+                try:
+                    previousLastId = int(gl.getFileStr('lastID.txt'))
+                    break
+                except:
+                    if tries == 4:
+                        traceback.print_exc()
+                        raise Exception('Gitlab issue')
+                    print(DMSender.sendMsg(api,recipient,"Unable to read last id, retry in 30 seconds"+str(tries)))
+                    tries+=1
+                time.sleep(30)
             newLastId = checkStatuses(previousLastId)
             #This is to only update the file if requiered
-            if(newLastId != previousLastId):         
-                gl.updateFile('lastID.txt',str(newLastId))
+            if(newLastId != previousLastId):
+                tries = 0
+                while True:
+                    try:
+                        gl.updateFile('lastID.txt',str(newLastId))
+                        break
+                    except:
+                        if(tries == 4):
+                            traceback.print_exc()
+                            raise Exception('Gitlab issue')
+                        print(DMSender.sendMsg(api,recipient,"Unable to write last id, retry in 30 seconds"))
+                        tries+=1
+                    time.sleep(30)
             print("So far today: {} mentions, {} replies, {} replied no image, {} errors. LAST_ID: {}".format(total,repliedImg,repliedNoImg,errors,newLastId))
             
         except tweepy.RateLimitError as e:
