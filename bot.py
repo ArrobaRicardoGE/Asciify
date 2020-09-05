@@ -8,8 +8,8 @@ errors = 0
 recipient = "860537503006298113"    #Yep, that is me, DM me if you want :)
 
 def authenticate():
-    auth = tweepy.OAuthHandler(os.environ["tw_consumer_keyB"],os.environ["tw_consumer_secretB"])
-    auth.set_access_token(os.environ["tw_access_tokenB"],os.environ["tw_access_token_secretB"])
+    auth = tweepy.OAuthHandler(os.environ["tw_consumer_key"],os.environ["tw_consumer_secret"])
+    auth.set_access_token(os.environ["tw_access_token"],os.environ["tw_access_token_secret"])
     api = tweepy.API(auth)
     gh = RepoUploader.API(os.environ["gh_key"])
     gl = RepoUploaderV2.API(os.environ["gl_token"])
@@ -24,14 +24,21 @@ def noImage(tweet):
     repliedNoImg+=1
 
 def replyTo(tweet):
-    if(tweet.user == api.me()):
+    if(tweet.user == api.me() or tweet.in_reply_to_user_id == api.me().id):
         return
     url = ""
-    try:
+    if 'media' in tweet.entities:
         url = getImgUrl(tweet)
-    except:
+    elif tweet.in_reply_to_status_id:
+        inReplyTo = api.get_status(tweet.in_reply_to_status_id)
+        if not 'media' in inReplyTo.entities:
+            noImage(tweet)
+            return
+        url = getImgUrl(inReplyTo)
+    else:
         noImage(tweet)
         return
+    
     img = Asciify.getImage(url)
     
     mat = Asciify.generate(img,"Assets/JetBrainsMono-ExtraBold.ttf",saveAs = "reply.png")
@@ -114,7 +121,7 @@ try:
             print(DMSender.sendMsg(api,recipient,"URGENT: {}\n Sleeping for two hours".format(str(e))))
             traceback.print_exc()
             time.sleep(7200)
-        time.sleep(15)
+        time.sleep(17)
 except Exception as e:
     api.sendMsg(api,recipient, "My battery is low, and it's getting dark")
     api.sendMsg(api,recipient,str(e))
