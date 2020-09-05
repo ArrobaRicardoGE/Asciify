@@ -30,7 +30,7 @@ def replyTo(tweet):
     if 'media' in tweet.entities:
         url = getImgUrl(tweet)
     elif tweet.in_reply_to_status_id:
-        inReplyTo = api.get_status(tweet.in_reply_to_status_id)
+        inReplyTo = api.get_status(tweet.in_reply_to_status_id, tweet_mode = 'extended')
         if not 'media' in inReplyTo.entities:
             noImage(tweet)
             return
@@ -50,7 +50,7 @@ def replyTo(tweet):
     repliedImg+=1
 
 def checkStatuses(lastId):
-    mentions = api.mentions_timeline(lastId)
+    mentions = api.mentions_timeline(lastId, tweet_mode = 'extended')
     mentions.reverse()
     for tweet in mentions:
         global total
